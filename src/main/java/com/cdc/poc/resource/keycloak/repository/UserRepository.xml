@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdc.poc.resource.keycloak.repository.UserRepository">
+    <insert id="createUser">
+        INSERT INTO user (id, username, full_name, password, created_at, updated_at)
+        VALUES (#{id}, #{username}, #{fullName}, #{password}, #{createdAt}, #{updatedAt})
+        RETURNING id
+    </insert>
+    <update id="updateUser">
+        UPDATE user
+        SET
+            <if test="fullName != null">
+                full_name = #{fullName},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteUser">
+        DELETE FROM user
+        WHERE id = #{id}
+    </delete>
+    <select id="getUser" resultType="com.cdc.poc.resource.keycloak.model.UserMdl">
+        SELECT id, username, full_name, password, created_at, updated_at
+        FROM user
+        <where>
+            <choose>
+                <when test="id != null">
+                    id = #{id}
+                </when>
+                <when test="username != null">
+                    username = #{username}
+                </when>
+            </choose>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,47 @@
+substitutions:
+  _SERVICE_NAME: keycloak-resource-svc-poc
+  _REGION: asia-southeast1
+  _PROJECT: active-bolt-478008-c9
+  _IMAGE_NAME: asia-southeast1-docker.pkg.dev/${_PROJECT}/cdc-keycloak-poc/keycloak-resource-svc-poc:latest
+
+steps:
+  # Step 1: Build Docker image using final JAR
+  - name: 'gcr.io/cloud-builders/docker'
+    env:
+      - 'DOCKER_BUILDKIT=1'
+    args:
+      [
+        'build',
+        '-f', './src/main/docker/Dockerfile.native-micro',
+        '-t', '${_IMAGE_NAME}',
+        '.'
+      ]
+
+  # Step 3: Push Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_IMAGE_NAME}']
+
+  # Step 4: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      [
+        'run', 'deploy', '${_SERVICE_NAME}',
+        '--image', '${_IMAGE_NAME}',
+        '--region', '${_REGION}',
+        '--platform', 'managed',
+        '--ingress', 'internal-and-cloud-load-balancing', # Allow traffic only from the LB
+        '--set-env-vars', 'DB_URL=jdbc:sqlite:sample.db',
+        '--port', '8080',
+        '--allow-unauthenticated',
+        '--project', '${_PROJECT}',
+        '--min-instances', '1',
+        '--max-instances', '1'
+      ]
+
+images:
+  - '${_IMAGE_NAME}'
+
+options:
+  logging: CLOUD_LOGGING_ONLY   # This avoids the log bucket error
+  dynamicSubstitutions: true
