@@ -30,7 +30,7 @@ steps:
         '--image', '${_IMAGE_NAME}',
         '--region', '${_REGION}',
         '--platform', 'managed',
-        '--ingress', 'internal-and-cloud-load-balancing', # Allow traffic only from the LB
+        '--ingress', 'all', # Allow traffic only from the LB
         '--set-env-vars', 'DB_URL=jdbc:sqlite:sample.db',
         '--port', '8080',
         '--allow-unauthenticated',

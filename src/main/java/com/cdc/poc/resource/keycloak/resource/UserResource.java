@@ -4,6 +4,7 @@ import com.cdc.poc.resource.keycloak.model.CreateUserRequest;
 import com.cdc.poc.resource.keycloak.model.UpdateUserRequest;
 import com.cdc.poc.resource.keycloak.model.UserMdl;
 import com.cdc.poc.resource.keycloak.repository.UserRepository;
+import io.quarkus.security.PermissionsAllowed;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 @Path("/api/data/user")
 @RequiredArgsConstructor
+@PermissionsAllowed("user-management-scope")
 public class UserResource {
     private final UserRepository userRepository;
 

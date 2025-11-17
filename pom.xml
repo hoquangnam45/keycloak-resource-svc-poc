@@ -81,6 +81,14 @@
             <artifactId>lombok</artifactId>
             <version>1.18.40</version>
         </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-oidc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-keycloak-authorization</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
