@@ -1,8 +1,9 @@
 substitutions:
-  _SERVICE_NAME: keycloak-resource-svc-poc
+  _SERVICE_NAME: resource-service
   _REGION: asia-southeast1
   _PROJECT: active-bolt-478008-c9
-  _IMAGE_NAME: asia-southeast1-docker.pkg.dev/${_PROJECT}/cdc-keycloak-poc/keycloak-resource-svc-poc:latest
+  _IMAGE_NAME: asia-southeast1-docker.pkg.dev/${_PROJECT}/cdc-keycloak-poc/resource-service:latest
+  _KEYCLOAK_AUTH_SERVER_URL: http://34.142.154.181/realms/poc-keycloak
 
 steps:
   # Step 1: Build Docker image using final JAR
@@ -17,11 +18,11 @@ steps:
         '.'
       ]
 
-  # Step 3: Push Docker image to Artifact Registry
+  # Step 2: Push Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', '${_IMAGE_NAME}']
 
-  # Step 4: Deploy to Cloud Run
+  # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -30,8 +31,8 @@ steps:
         '--image', '${_IMAGE_NAME}',
         '--region', '${_REGION}',
         '--platform', 'managed',
-        '--ingress', 'all', # Allow traffic only from the LB
-        '--set-env-vars', 'DB_URL=jdbc:sqlite:sample.db',
+        '--ingress', 'all',
+        '--set-env-vars', 'DB_URL=jdbc:sqlite:sample.db,KEYCLOAK_AUTH_SERVER_URL=${_KEYCLOAK_AUTH_SERVER_URL}',
         '--port', '8080',
         '--allow-unauthenticated',
         '--project', '${_PROJECT}',
@@ -43,5 +44,5 @@ images:
   - '${_IMAGE_NAME}'
 
 options:
-  logging: CLOUD_LOGGING_ONLY   # This avoids the log bucket error
+  logging: CLOUD_LOGGING_ONLY
   dynamicSubstitutions: true

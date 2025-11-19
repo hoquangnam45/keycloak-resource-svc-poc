@@ -1,12 +1,10 @@
-greeting:
-  message: "hello"
 quarkus:
   http:
     port: 8080
   datasource:
     db-kind: sqlite
     jdbc:
-      url: ${DB_URL:jdbc:sqlite:sample.db}
+      url: ${DB_URL}
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -20,7 +18,7 @@ quarkus:
         - db/migration/**
   oidc:
     enabled: true
-    auth-server-url: http://34.142.154.181/realms/david-test-realm
+    auth-server-url: ${KEYCLOAK_AUTH_SERVER_URL}
     tls:
       verification: none
   log:
