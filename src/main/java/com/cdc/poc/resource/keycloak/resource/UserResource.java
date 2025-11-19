@@ -18,7 +18,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.UUID;
 
-@Path("/api/data/user")
+@Path("/api/users")
 @RequiredArgsConstructor
 @PermissionsAllowed("user-management-scope")
 public class UserResource {
