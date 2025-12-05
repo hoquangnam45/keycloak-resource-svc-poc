@@ -21,15 +21,15 @@ quarkus:
     # 1. Disable the default tenant so it doesn't demand a URL
     tenant-enabled: false
     poc-keycloak-cluster:
-      enabled: true
       auth-server-url: ${KEYCLOAK_AUTH_SERVER_URL}
       tls:
         verification: none
+      tenant-enabled: true
     poc-keycloak-cluster-new:
-      enabled: true
       auth-server-url: ${KEYCLOAK_NEW_AUTH_SERVER_URL}
       tls:
         verification: none
+      tenant-enabled: true
 
   log:
     category:
