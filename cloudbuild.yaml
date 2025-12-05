@@ -4,6 +4,7 @@ substitutions:
   _PROJECT: active-bolt-478008-c9
   _IMAGE_NAME: asia-southeast1-docker.pkg.dev/${_PROJECT}/cdc-keycloak-poc/resource-service:latest
   _KEYCLOAK_AUTH_SERVER_URL: http://34.142.154.181/realms/poc-keycloak
+  _NEW_KEYCLOAK_AUTH_SERVER_URL: http://35.240.191.5/realms/poc-keycloak-new
 
 steps:
   # Step 1: Build Docker image using final JAR
@@ -32,7 +33,7 @@ steps:
         '--region', '${_REGION}',
         '--platform', 'managed',
         '--ingress', 'all',
-        '--set-env-vars', 'DB_URL=jdbc:sqlite:sample.db,KEYCLOAK_AUTH_SERVER_URL=${_KEYCLOAK_AUTH_SERVER_URL}',
+        '--set-env-vars', 'DB_URL=jdbc:sqlite:sample.db,KEYCLOAK_AUTH_SERVER_URL=${_KEYCLOAK_AUTH_SERVER_URL}, KEYCLOAK_NEW_AUTH_SERVER_URL=${_NEW_KEYCLOAK_AUTH_SERVER_URL}',
         '--port', '8080',
         '--allow-unauthenticated',
         '--project', '${_PROJECT}',
